@@ -1,18 +1,22 @@
-#usr/bin/python3
-def minOperations(n): 
-    if n == 0: 
-        return 0 
-    elif n == 1: 
-        return 1 
-    else: 
-        # find the largest power of 2 that is less than or equal to n 
-        p = 2  
-        while p <= n:  
-            p *= 2  
+#!/usr/bin/python3
+'''Interview Challenge module
+'''
 
-        # subtract the largest power of 2 from n and recur for the remaining number  
-        return 1 + minOperations(n - (p//2))  
 
-     # Driver code  
-n = 10     # Number of H's required in the file  
-print(minOperations(n))
+def minOperations(n):
+    '''finds no of time opertion is performed
+    '''
+    if not isinstance(n, int):
+        return 0
+    var = 'H'
+    count = 0
+    dup = ''
+    while len(var) < n:
+        if n % len(var) != 0:
+            var += dup
+            count += 1
+        else:
+            dup = var
+            var += dup
+            count += 2
+    return (count if len(var) == n else 0)
