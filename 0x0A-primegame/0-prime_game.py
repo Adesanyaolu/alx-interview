@@ -1,47 +1,47 @@
 #!/usr/bin/python3
+"""
+isWineer: a function for the solution to the Prime Game problem
+"""
 
 def isWinner(x, nums):
-    # Define a function to check if a number is prime
-    def is_prime(n):
-        if n <= 1:
-            return False
-        for i in range(2, int(n ** 0.5) + 1):
-            if n % i == 0:
-                return False
-        return True
-
-    # Define a function to simulate a single turn of the game
-    def play_game(n):
-        # Create a set of consecutive integers from 1 to n
-        nums = set(range(1, n + 1))
-        # Define the starting player
-        player = 'Maria'
-        # Continue playing until there are no more primes in the set
-        while True:
-            # Find the next prime number in the set
-            next_prime = min(filter(is_prime, nums))
-            # Remove the prime number and its multiples from the set
-            nums.difference_update(range(next_prime, n + 1, next_prime))
-            # If the set is now empty, the current player has lost
-            if not nums:
-                return player
-            # Switch to the other player
-            player = 'Ben' if player == 'Maria' else 'Maria'
-
-    # Simulate each round of the game and keep track of the winner
-    maria_wins = 0
-    ben_wins = 0
+    """
+     Returns winner of the game 
+    """
+    wins = {"Maria": 0, "Ben": 0}
     for n in nums:
-        winner = play_game(n)
-        if winner == 'Maria':
-            maria_wins += 1
-        elif winner == 'Ben':
-            ben_wins += 1
-
-    # Determine the overall winner and return their name
-    if maria_wins > ben_wins:
-        return 'Maria'
-    elif ben_wins > maria_wins:
-        return 'Ben'
+        winner = None
+        primes = set(range(2, n+1))
+        while primes:
+            # Maria's turn
+            if winner != "Ben":
+                m_pick = None
+                for p in sorted(primes):
+                    if all(p*i not in primes for i in range(2, n//p+1)):
+                        m_pick = p
+                        break
+                if m_pick is None:
+                    winner = "Ben"
+                    break
+                primes -= set(range(m_pick, n+1, m_pick))
+            # Ben's turn
+            if winner != "Maria":
+                b_pick = None
+                for p in sorted(primes):
+                    if all(p*i not in primes for i in range(2, n//p+1)):
+                        b_pick = p
+                        break
+                if b_pick is None:
+                    winner = "Maria"
+                    break
+                primes -= set(range(b_pick, n+1, b_pick))
+        if winner is not None:
+            wins[winner] += 1
+    if wins["Maria"] > wins["Ben"]:
+        """
+            Return name with most wins
+        """
+        return "Maria"
+    elif wins["Maria"] < wins["Ben"]:
+        return "Ben"
     else:
         return None
